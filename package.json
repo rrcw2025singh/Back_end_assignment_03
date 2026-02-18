@@ -1,6 +1,10 @@
 {
   "devDependencies": {
     "@types/jest": "^30.0.0",
+    "@types/joi": "^17.2.2",
     "ts-jest": "^29.4.6"
+  },
+  "dependencies": {
+    "joi": "^18.0.2"
   }
 }
