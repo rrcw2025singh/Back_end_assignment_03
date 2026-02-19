@@ -1,9 +1,5 @@
 // Always mock firestore in every test
-jest.mock("../config/firebaseConfig", () => ({
-    auth: {
-        verifyIdToken: jest.fn(),
-        getUser: jest.fn(),
-    },
+jest.mock("../src/config/firebaseConfig", () => ({
     db: {
         collection: jest.fn(),
         runTransaction: jest.fn(),
