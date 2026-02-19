@@ -1,39 +1,31 @@
 import Joi from "joi";
 
-export const eventSchemas = {
-    create: {
-        body: Joi.object({
-            name: Joi.string()
-                .min(3)
-                .required(),
+export const createEventSchema = Joi.object({
+  name: Joi.string()
+    .min(3)
+    .required(),
 
-            date: Joi.date()
-                .iso()
-                .greater("now")
-                .required(),
+  date: Joi.date()
+    .iso()
+    .greater("now")
+    .required(),
 
-            capacity: Joi.number()
-                .integer()
-                .min(5)
-                .required(),
+  capacity: Joi.number()
+    .integer()
+    .min(5)
+    .required(),
 
-            registrationCount: Joi.number()
-                .integer()
-                .max(Joi.ref("capacity")),
+  registrationCount: Joi.number()
+    .integer()
+    .min(0)
+    .max(Joi.ref("capacity"))
+    .optional(),
 
-            status: Joi.string()
-                .valid("active", "cancelled", "completed")
-                .default("active"),
+  status: Joi.string()
+    .valid("active", "cancelled", "completed")
+    .optional(),
 
-            category: Joi.string()
-                .valid(
-                    "conference",
-                    "workshop",
-                    "meetup",
-                    "seminar",
-                    "general"
-                )
-                .default("general"),
-        }),
-    },
-};
+  category: Joi.string()
+    .valid("conference", "workshop", "meetup", "seminar", "general")
+    .optional()
+});
