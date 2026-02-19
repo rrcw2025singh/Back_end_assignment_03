@@ -81,4 +81,21 @@ export const updateEvent = (req: Request, res: Response) => {
     data: updatedEvent
   });
 };
+export const deleteEvent = (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const eventIndex = EventSource.findIndex(event => event.id === id);
+
+  if (eventIndex === -1) {
+    return res.status(404).json({
+      message: `Event with id ${id} not found`
+    });
+  }
+
+  EventSource.splice(eventIndex, 1);
+
+  return res.status(200).json({
+    message: "Event deleted successfully"
+  });
+};
 
