@@ -1,11 +1,24 @@
 {
+  "name": "back_end_assignment_03",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.22.1",
+    "joi": "^18.0.2"
+  },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/joi": "^17.2.2",
-    "ts-jest": "^29.4.6"
-  },
-  "dependencies": {
-    "joi": "^18.0.2"
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.x",
+    "ts-node-dev": "^2.x",
+    "typescript": "^5.x"
   }
 }
