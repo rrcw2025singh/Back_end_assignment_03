@@ -1,101 +1,97 @@
 import { Request, Response } from "express";
+import {
+  createDocument,
+  getDocuments,
+  getDocumentById,
+  updateDocument,
+  deleteDocument,
+} from "../repositories/eventRepository";
 
-let eventIdCounter = 1;
-const EventSource: any[] = [];
-
-export const createEvent = (req: Request, res: Response) => {
-
+export const createEvent = async (req: Request, res: Response) => {
   const {
     name,
     date,
     capacity,
     registrationCount = 0,
     status = "active",
-    category = "general"
+    category = "general",
   } = req.body;
 
-  const newEvent = {
-    id: `evt_${String(eventIdCounter++).padStart(6, "0")}`,
+  const newEvent = await createDocument("events", {
     name,
     date,
     capacity,
     registrationCount,
     status,
     category,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  };
-
-  EventSource.push(newEvent);
+  });
 
   return res.status(201).json({
     message: "Event created",
-    data: newEvent
+    data: newEvent,
   });
 };
 
-  export const getAllEvents =(req: Request, res: Response) => {
-        return res.status(200).json({
-            message: "Events retrieved successfully",
-            data: EventSource
-        });
+export const getAllEvents = async (req: Request, res: Response) => {
+  const events = await getDocuments("events");
+
+  return res.status(200).json({
+    message: "Events retrieved successfully",
+    data: events,
+  });
 };
 
-export const getEventById = (req: Request, res: Response) => {
-  const { id } = req.params;
+export const getEventById = async (req: Request, res: Response) => {
+  const id = String(req.params.id);
 
-  const event = EventSource.find(e => e.id === id);
+  const event = await getDocumentById("events", id);
 
   if (!event) {
     return res.status(404).json({
-      message: `Event with id ${id} not found`
+      message: `Event with id ${id} not found`,
     });
   }
 
   return res.status(200).json({
     message: "Event retrieved successfully",
-    data: event
+    data: event,
   });
 };
-export const updateEvent = (req: Request, res: Response) => {
-  const { id } = req.params;
 
-  const eventIndex = EventSource.findIndex(event => event.id === id);
+export const updateEvent = async (req: Request, res: Response) => {
+  const id = String(req.params.id);
 
-  if (eventIndex === -1) {
+  const existingEvent = await getDocumentById("events", id);
+
+  if (!existingEvent) {
     return res.status(404).json({
-      message: `Event with id ${id} not found`
+      message: `Event with id ${id} not found`,
     });
   }
 
-  const updatedEvent = {
-    ...EventSource[eventIndex],
-    ...req.body,
-    updatedAt: new Date().toISOString()
-  };
-
-  EventSource[eventIndex] = updatedEvent;
+  const updatedEvent = await updateDocument("events", id, req.body);
 
   return res.status(200).json({
     message: "Event updated successfully",
-    data: updatedEvent
+    data: updatedEvent,
   });
 };
-export const deleteEvent = (req: Request, res: Response) => {
-  const { id } = req.params;
 
-  const eventIndex = EventSource.findIndex(event => event.id === id);
+export const deleteEvent = async (req: Request, res: Response) => {
+  const id = String(req.params.id);
 
-  if (eventIndex === -1) {
+  const existingEvent = await getDocumentById("events", id);
+
+  if (!existingEvent) {
     return res.status(404).json({
-      message: `Event with id ${id} not found`
+      message: `Event with id ${id} not found`,
     });
   }
 
-  EventSource.splice(eventIndex, 1);
+  await deleteDocument("events", id);
 
   return res.status(200).json({
-    message: "Event deleted successfully"
+    message: "Event deleted successfully",
   });
 };
-
+       
